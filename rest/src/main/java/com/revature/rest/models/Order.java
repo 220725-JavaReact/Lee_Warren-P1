@@ -3,6 +3,7 @@ package com.revature.rest.models;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * The users' orders.
@@ -53,6 +54,13 @@ public class Order {
 		return id;
 	}
 	/**
+	 * Sets the store's id.
+	 * @param newId the store's new id
+	 */
+	public void setId(int newId) {
+		id = newId;
+	}
+	/**
 	 * Returns the user's id.
 	 * @return the user's id
 	 */
@@ -81,6 +89,13 @@ public class Order {
 		return date;
 	}
 	/**
+	 * Sets the order's timestamp.
+	 * @param newDate the order's new timestamp
+	 */
+	public void setDate(Timestamp newDate) {
+		date = newDate;
+	}
+	/**
 	 * Returns an arraylist of the order's line items.
 	 * @return an arraylist of the order's line items
 	 */
@@ -92,8 +107,31 @@ public class Order {
 	 * @param newLineItem the new line item
 	 */
 	public void addItem(LineItem newLineItem) {
-		lineItems.add(newLineItem);
+		Optional<LineItem> foundLineItem = lineItems.stream().filter(lineItem -> lineItem.getItem().equals(newLineItem.getItem())).findFirst();
+		if (foundLineItem.isPresent()) {
+			LineItem lineItem = foundLineItem.get();
+			lineItem.setQuantity(lineItem.getQuantity() + newLineItem.getQuantity());
+		} else {
+			lineItems.add(newLineItem);
+		}
 		total += newLineItem.getItem().getPrice() * newLineItem.getQuantity();
+	}
+	/**
+	 * Removes a line item from the order and updates the order total.
+	 * @param removeLineItem the line item to remove
+	 */
+	public void removeItem(LineItem removeLineItem) {
+		Optional<LineItem> foundLineItem = lineItems.stream().filter(lineItem -> lineItem.getItem().equals(removeLineItem.getItem())).findFirst();
+		if (foundLineItem.isPresent()) {
+			LineItem lineItem = foundLineItem.get();
+			if (lineItem.getQuantity() < removeLineItem.getQuantity()) return;
+			else if (lineItem.getQuantity() > removeLineItem.getQuantity()) {
+				lineItem.setQuantity(lineItem.getQuantity() - removeLineItem.getQuantity());
+			} else if (lineItem.getQuantity() == removeLineItem.getQuantity()) {
+				lineItems.remove(lineItem);
+			}
+			total -= removeLineItem.getItem().getPrice() * removeLineItem.getQuantity();
+		}
 	}
 	/**
 	 * Outputs this order as a string including the order's id, the user's id, the store's id, the order timestamp, each line item, and the order's total.

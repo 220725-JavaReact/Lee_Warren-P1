@@ -10,7 +10,14 @@ public class Store {
 	private String address;
 	private Double balance;
 	/**
-	 * Constructs a store with the specified data.
+	 * Constructs a store from the specified data.
+	 * @param name the store's name
+	 */
+	public Store(String name) {
+		this.name = name;
+	}
+	/**
+	 * Constructs a store from the specified data.
 	 * @param name the store's name
 	 * @param address the store's address
 	 * @param balance the store's balance
@@ -22,7 +29,7 @@ public class Store {
 		this.balance = balance;
 	}
 	/**
-	 * Constructs a store with the specified data.
+	 * Constructs a store from the specified data.
 	 * @param id the store's id
 	 * @param name the store's name
 	 * @param address the store's address
@@ -42,6 +49,13 @@ public class Store {
 		return id;
 	}
 	/**
+	 * Sets the store's id.
+	 * @param newId the store's new id
+	 */
+	public void setId(int newId) {
+		id = newId;
+	}
+	/**
 	 * Returns the store's name.
 	 * @return the store's name
 	 */
@@ -50,10 +64,10 @@ public class Store {
 	}
 	/**
 	 * Sets the store's name.
-	 * @param name the store's new name
+	 * @param newName the store's new name
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String newName) {
+		name = newName;
 	}
 	/**
 	 * Returns the store's address.
@@ -64,10 +78,10 @@ public class Store {
 	}
 	/**
 	 * Sets the store's address.
-	 * @param address the store's new address
+	 * @param newAddress the store's new address
 	 */
-	public void setAddress(String address) {
-		this.address = address;
+	public void setAddress(String newAddress) {
+		address = newAddress;
 	}
 	/**
 	 * Returns the store's balance.
@@ -78,10 +92,10 @@ public class Store {
 	}
 	/**
 	 * Sets the store's balance.
-	 * @param balance the store's new balance
+	 * @param newBalance the store's new balance
 	 */
-	public void setBalance(Double balance) {
-		this.balance = balance;
+	public void setBalance(Double newBalance) {
+		balance = newBalance;
 	}
 	/**
 	 * Outputs this store as a string including the id, name, address, and store balance.

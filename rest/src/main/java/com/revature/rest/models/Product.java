@@ -15,6 +15,13 @@ public class Product {
 	/**
 	 * Constructs a product from the specified data.
 	 * @param name the product's name
+	 */
+	public Product(String name) {
+		this.name = name;
+	}
+	/**
+	 * Constructs a product from the specified data.
+	 * @param name the product's name
 	 * @param category the product's category
 	 * @param description the product's description
 	 * @param price the product's price
@@ -49,6 +56,13 @@ public class Product {
 		return id;
 	}
 	/**
+	 * Sets the product's id.
+	 * @param newId the product's new id
+	 */
+	public void setId(int newId) {
+		id = newId;
+	}
+	/**
 	 * Returns the product's name.
 	 * @return the product's name
 	 */
@@ -68,6 +82,13 @@ public class Product {
 	 */
 	public ProductCategory getCategory() {
 		return category;
+	}
+	/**
+	 * Sets the product's category.
+	 * @param newCategory the product's new category
+	 */
+	public void setCategory(ProductCategory newCategory) {
+		category = newCategory;
 	}
 	/**
 	 * Returns the product's description.
