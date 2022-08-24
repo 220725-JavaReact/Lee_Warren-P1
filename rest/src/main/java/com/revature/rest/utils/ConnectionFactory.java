@@ -35,7 +35,7 @@ public class ConnectionFactory {
 	 * Gets a connection to the database and returns it.
 	 * @return a connection to the database
 	 */
-	public static Connection getConnection() {
+	public Connection getConnection() {
 		logger.info("Getting connection to database...");
 		Connection dbConnection = null;
 		Properties properties = PropertiesFactory.getInstance().loadProperties();
