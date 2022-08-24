@@ -1,5 +1,5 @@
 # Build directory
-rest/target/
+rest/target/*
 
 # Compiled class file
 *.class
