@@ -1,6 +1,5 @@
 package com.revature.test;
 
-import java.sql.Connection;
 import java.util.Properties;
 
 import org.junit.Assert;
