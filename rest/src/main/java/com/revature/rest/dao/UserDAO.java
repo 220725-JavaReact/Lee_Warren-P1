@@ -21,7 +21,6 @@ import com.revature.rest.utils.ConnectionFactory;
  */
 public class UserDAO implements DAO<User> {
 	private static Logger logger = LogManager.getLogger(UserDAO.class);
-
 	@Override
 	public User addInstance(User instance) {
 		logger.info("Adding new user...");
@@ -42,7 +41,6 @@ public class UserDAO implements DAO<User> {
 		}
 		return instance;
 	}
-
 	@Override
 	public List<User> getAllInstances() {
 		logger.info("Getting all users...");
@@ -68,7 +66,6 @@ public class UserDAO implements DAO<User> {
 		}
 		return users;
 	}
-
 	@Override
 	public boolean updateInstance(User instance) {
 		logger.info("Updating user with id = " + instance.getId() + "...");
@@ -91,7 +88,6 @@ public class UserDAO implements DAO<User> {
 			return false;
 		}
 	}
-
 	@Override
 	public boolean deleteInstance(User instance) {
 		logger.info("Deleting user with id = " + instance.getId() + "...");
@@ -107,5 +103,4 @@ public class UserDAO implements DAO<User> {
 			return false;
 		}
 	}
-	
 }

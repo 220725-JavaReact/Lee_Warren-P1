@@ -7,13 +7,34 @@ import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.revature.rest.dao.DAO;
+import com.revature.rest.dao.ProductDAO;
 import com.revature.rest.dao.UserDAO;
+import com.revature.rest.models.Product;
 import com.revature.rest.models.User;
 import com.revature.rest.utils.AccessLevel;
 import com.revature.rest.utils.PasswordFactory;
+import com.revature.rest.utils.ProductCategory;
 
 public class DAOTest {
-	DAO<User> userDAO = new UserDAO();
+	private DAO<Product> productDAO = new ProductDAO();
+	private DAO<User> userDAO = new UserDAO();
+	@Test
+	public void testProductDAO() {
+		Product product = new Product(
+			"Bead of Nourishment",
+			ProductCategory.WONDROUS_ITEM,
+			"This spongy, flavorless, gelatinous bead dissolves on your tongue and provides as much nourishment as 1 day of rations.",
+			50.0
+		);
+		product = productDAO.addInstance(product);
+		Assert.assertNotEquals(product.getId(), 0);
+		ArrayList<Product> products = (ArrayList<Product>) productDAO.getAllInstances();
+		Assert.assertFalse(products.isEmpty());
+		String newName = "Cube of Nourishment";
+		product.setName(newName);
+		Assert.assertTrue(productDAO.updateInstance(product));
+		Assert.assertTrue(productDAO.deleteInstance(product));
+	}
 	@Test
 	public void testUserDAO() {
 		String encodedPassword = PasswordFactory.getInstance().encodePassword("password123");
