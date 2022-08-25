@@ -8,8 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.revature.rest.dao.DAO;
 import com.revature.rest.dao.ProductDAO;
+import com.revature.rest.dao.StoreDAO;
 import com.revature.rest.dao.UserDAO;
 import com.revature.rest.models.Product;
+import com.revature.rest.models.Store;
 import com.revature.rest.models.User;
 import com.revature.rest.utils.AccessLevel;
 import com.revature.rest.utils.PasswordFactory;
@@ -17,6 +19,7 @@ import com.revature.rest.utils.ProductCategory;
 
 public class DAOTest {
 	private DAO<Product> productDAO = new ProductDAO();
+	private DAO<Store> storeDAO = new StoreDAO();
 	private DAO<User> userDAO = new UserDAO();
 	@Test
 	public void testProductDAO() {
@@ -34,6 +37,22 @@ public class DAOTest {
 		product.setName(newName);
 		Assert.assertTrue(productDAO.updateInstance(product));
 		Assert.assertTrue(productDAO.deleteInstance(product));
+	}
+	@Test
+	public void testStoreDAO() {
+		Store store = new Store(
+			"Gravity Falls Mall",
+			"618 Gopher Rd, Gravity Falls, OR 97478",
+			16551.0
+		);
+		store = storeDAO.addInstance(store);
+		Assert.assertNotEquals(store.getId(), 0);
+		ArrayList<Store> stores= (ArrayList<Store>) storeDAO.getAllInstances();
+		Assert.assertFalse(stores.isEmpty());
+		String newName = "Gravity Falls Mega Mall";
+		store.setName(newName);
+		Assert.assertTrue(storeDAO.updateInstance(store));
+		Assert.assertTrue(storeDAO.deleteInstance(store));
 	}
 	@Test
 	public void testUserDAO() {
