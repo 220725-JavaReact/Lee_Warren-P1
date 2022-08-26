@@ -10,11 +10,10 @@ public class Store {
 	private String address;
 	private Double balance;
 	/**
-	 * Constructs a store from the specified data.
-	 * @param name the store's name
+	 * Constructs a blank store.
 	 */
-	public Store(String name) {
-		this.name = name;
+	public Store() {
+
 	}
 	/**
 	 * Constructs a store from the specified data.

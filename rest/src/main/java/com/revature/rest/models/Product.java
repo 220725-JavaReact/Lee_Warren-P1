@@ -13,11 +13,10 @@ public class Product {
 	private String description;
 	private Double price;
 	/**
-	 * Constructs a product from the specified data.
-	 * @param name the product's name
+	 * Constructs a blank product.
 	 */
-	public Product(String name) {
-		this.name = name;
+	public Product() {
+		
 	}
 	/**
 	 * Constructs a product from the specified data.

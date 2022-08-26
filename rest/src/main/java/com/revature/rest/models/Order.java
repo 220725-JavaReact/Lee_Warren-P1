@@ -17,6 +17,12 @@ public class Order {
 	private Timestamp date;
 	private ArrayList<LineItem> lineItems;
 	/**
+	 * Constructs a blank order.
+	 */
+	public Order() {
+		
+	}
+	/**
 	 * Constructs an order from the specified data.
 	 * @param userId the user's id
 	 * @param storeId the store's id
@@ -54,8 +60,8 @@ public class Order {
 		return id;
 	}
 	/**
-	 * Sets the store's id.
-	 * @param newId the store's new id
+	 * Sets the order's id.
+	 * @param newId the order's new id
 	 */
 	public void setId(int newId) {
 		id = newId;
@@ -68,6 +74,13 @@ public class Order {
 		return userId;
 	}
 	/**
+	 * Sets the user's id.
+	 * @param newUserId The new user's id
+	 */
+	public void setUserId(int newUserId) {
+		userId = newUserId;
+	}
+	/**
 	 * Returns the store's id.
 	 * @return the store's id
 	 */
@@ -75,11 +88,25 @@ public class Order {
 		return storeId;
 	}
 	/**
+	 * Sets the store's id.
+	 * @param newStoreId the new store's id
+	 */
+	public void setStoreId(int newStoreId) {
+		storeId = newStoreId;
+	}
+	/**
 	 * Returns the order's total.
 	 * @return the order's total
 	 */
 	public Double getTotal() {
 		return total;
+	}
+	/**
+	 * Sets the order's total.
+	 * @param newTotal the order's new total
+	 */
+	public void setTotal(Double newTotal) {
+		total = newTotal;
 	}
 	/**
 	 * Returns the order's timestamp.
@@ -103,25 +130,32 @@ public class Order {
 		return lineItems;
 	}
 	/**
+	 * Sets the order's line items to an input arraylist.
+	 * @param newLineItems the order's new line items
+	 */
+	public void setLineItems(ArrayList<LineItem> newLineItems) {
+		lineItems = newLineItems;
+	}
+	/**
 	 * Adds a line item to the order and updates the order total.
 	 * @param newLineItem the new line item
 	 */
 	public void addItem(LineItem newLineItem) {
-		Optional<LineItem> foundLineItem = lineItems.stream().filter(lineItem -> lineItem.getItem().equals(newLineItem.getItem())).findFirst();
+		Optional<LineItem> foundLineItem = lineItems.stream().filter(lineItem -> lineItem.getProduct().equals(newLineItem.getProduct())).findFirst();
 		if (foundLineItem.isPresent()) {
 			LineItem lineItem = foundLineItem.get();
 			lineItem.setQuantity(lineItem.getQuantity() + newLineItem.getQuantity());
 		} else {
 			lineItems.add(newLineItem);
 		}
-		total += newLineItem.getItem().getPrice() * newLineItem.getQuantity();
+		total += newLineItem.getProduct().getPrice() * newLineItem.getQuantity();
 	}
 	/**
 	 * Removes a line item from the order and updates the order total.
 	 * @param removeLineItem the line item to remove
 	 */
 	public void removeItem(LineItem removeLineItem) {
-		Optional<LineItem> foundLineItem = lineItems.stream().filter(lineItem -> lineItem.getItem().equals(removeLineItem.getItem())).findFirst();
+		Optional<LineItem> foundLineItem = lineItems.stream().filter(lineItem -> lineItem.getProduct().equals(removeLineItem.getProduct())).findFirst();
 		if (foundLineItem.isPresent()) {
 			LineItem lineItem = foundLineItem.get();
 			if (lineItem.getQuantity() < removeLineItem.getQuantity()) return;
@@ -130,7 +164,7 @@ public class Order {
 			} else if (lineItem.getQuantity() == removeLineItem.getQuantity()) {
 				lineItems.remove(lineItem);
 			}
-			total -= removeLineItem.getItem().getPrice() * removeLineItem.getQuantity();
+			total -= removeLineItem.getProduct().getPrice() * removeLineItem.getQuantity();
 		}
 	}
 	/**

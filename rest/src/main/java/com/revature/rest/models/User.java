@@ -17,11 +17,10 @@ public class User {
 	private String password;
 	private AccessLevel level;
 	/**
-	 * Constructs a user from the specified data.
-	 * @param name the user's name
+	 * Constructs a blank user.
 	 */
-	public User(String name) {
-		this.name = name;
+	public User() {
+
 	}
 	/**
 	 * Constructs a user from the specified data.
