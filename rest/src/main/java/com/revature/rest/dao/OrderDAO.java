@@ -38,6 +38,7 @@ public class OrderDAO implements DAO<Order> {
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				instance.setId(resultSet.getInt("id"));
+				logger.info("Adding new order's line items...");
 				for (LineItem currentLineItem : instance.getLineItems()) {
 					String query2 = "insert into order_items (order_id, product_id, quantity) values (?, ?, ?)";
 					PreparedStatement statement2 = dbConnection.prepareStatement(query2);
@@ -46,6 +47,7 @@ public class OrderDAO implements DAO<Order> {
 					statement2.setInt(3, currentLineItem.getQuantity());
 					statement2.execute();
 					if (statement2.getUpdateCount() > 0) {
+						logger.info("Updating store's inventory of order's line item...");
 						String query3 = "update store_products set quantity = quantity - ? where store_id = ? and product_id = ?";
 						PreparedStatement statement3 = dbConnection.prepareStatement(query3);
 						statement3.setInt(1, currentLineItem.getQuantity());
@@ -53,25 +55,28 @@ public class OrderDAO implements DAO<Order> {
 						statement3.setInt(3, currentLineItem.getProduct().getId());
 						if (statement3.getUpdateCount() > 0) continue;
 					}
+					logger.warn("Transaction failed. Rolling back changes.");
 					dbConnection.rollback();
 					dbConnection.setAutoCommit(true);
 					instance.setId(0);
 					break;
 				}
+				logger.info("Transaction succeeded. Commiting changes...");
 				dbConnection.commit();
 				dbConnection.setAutoCommit(true);
 			} else {
+				logger.warn("Transaction failed. Rolling back changes.");
 				dbConnection.rollback();
 				dbConnection.setAutoCommit(true);
 				instance.setId(0);
 			}
 		} catch (SQLException e) {
-			logger.warn("Failed to add new order.", e);
+			logger.warn("Failed to add new order. Rolling back changes.", e);
 			try {
 				dbConnection.rollback();
 				dbConnection.setAutoCommit(true);
 			} catch (SQLException e2) {
-				logger.warn("Failed to rollback database.", e2);
+				logger.warn("Failed to rollback changes.", e2);
 			}
 			instance.setId(0);
 		}

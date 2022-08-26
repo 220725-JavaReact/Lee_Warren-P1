@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 public class PropertiesFactory {
 	private static PropertiesFactory propertiesFactory = new PropertiesFactory();
 	private static Logger logger = LogManager.getLogger(PropertiesFactory.class);
-	private static final String propertiesPath = "src\\main\\resources\\application.properties";
+	private static final String propertiesPath = "..\\Lee-Warren-P1\\rest\\src\\main\\resources\\application.properties";
 	/**
 	 * Returns the PropertiesFactory instance.
 	 * @return the PropertiesFactory instance

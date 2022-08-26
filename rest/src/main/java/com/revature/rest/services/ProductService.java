@@ -42,10 +42,10 @@ public class ProductService {
 		Optional<Product> foundProduct = products.stream().filter(product -> product.getId() == id).findFirst();
 		if (foundProduct.isPresent()) return foundProduct.get();
 		else {
-			logger.warn("Failed to get product with id = " + id + "...");
-			Product product = new Product();
-			product.setName("Product not found");
-			return product;
+			logger.warn("Failed to get product with id = " + id + ".");
+			Product notFoundProduct = new Product();
+			notFoundProduct.setName("Product not found");
+			return notFoundProduct;
 		}
 	}
 }
