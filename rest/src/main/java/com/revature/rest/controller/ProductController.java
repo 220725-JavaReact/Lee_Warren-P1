@@ -13,17 +13,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.rest.dao.UserDAO;
-import com.revature.rest.models.User;
-import com.revature.rest.services.UserService;
+import com.revature.rest.dao.ProductDAO;
+import com.revature.rest.models.Product;
+import com.revature.rest.services.ProductService;
+import com.revature.rest.utils.ProductCategory;
 
 /**
- * Handles servlet requests for users.
+ * Handles servlet requests for products.
  * @author Warren Lee
  */
-public class UserController extends HttpServlet {
-	private static Logger logger = LogManager.getLogger(UserController.class);
-	private static UserService userService = new UserService(new UserDAO());
+public class ProductController extends HttpServlet {
+	private static Logger logger = LogManager.getLogger(ProductController.class);
+	private static ProductService productService = new ProductService(new ProductDAO());
 	private static ObjectMapper objectMapper = new ObjectMapper();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -32,33 +33,35 @@ public class UserController extends HttpServlet {
 		resp.setContentType("application/json");
 		String jsonResponse = null;
 		switch (requestURI) {
-		case "user":
-			User user = new User();
-			user.setName("User not found");
+		case "product":
+			Product product = new Product();
+			product.setName("Prouct not found");
 			if (parameterMap.containsKey("id")) {
 				int id = 0;
 				try {
 					id = Integer.parseInt(parameterMap.get("id")[0]);
 					if (id > 0) {
-						user = userService.getUserById(id);
+						product = productService.getProductById(id);
 					}
 				} catch (NumberFormatException e) {
 					logger.warn("Invalid id parameter.", e);
 				}
-			} else if (parameterMap.containsKey("username")) {
-				user = userService.getUserByUsername(parameterMap.get("username")[0]);
 			}
-			user.setPassword("HIDDEN");
-			jsonResponse = objectMapper.writeValueAsString(user);
+			jsonResponse = objectMapper.writeValueAsString(product);
 			resp.getWriter().println(jsonResponse);
 			break;
-		case "users":
-			List<User> users = null;
+		case "products":
+			List<Product> products = null;
 			if (parameterMap.isEmpty()) {
-				users = userService.getAllUsers();
-				for (User currentUser : users) currentUser.setPassword("HIDDEN");
+				products = productService.getAllProducts();
+			} else if (parameterMap.containsKey("category")) {
+				try {
+					products = productService.getProductsByCategory(ProductCategory.valueOf(parameterMap.get("category")[0].toUpperCase()));
+				} catch (IllegalArgumentException e) {
+					logger.warn("Invalid id parameter.", e);
+				}
 			}
-			jsonResponse = objectMapper.writeValueAsString(users);
+			jsonResponse = objectMapper.writeValueAsString(products);
 			resp.getWriter().println(jsonResponse);
 			break;
 		default:
