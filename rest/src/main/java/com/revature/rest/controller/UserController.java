@@ -75,6 +75,10 @@ public class UserController extends HttpServlet {
 			User user = objectMapper.readValue(jsonRequest, User.class);
 			user.setPassword(PasswordFactory.getInstance().encodePassword(user.getPassword()));
 			user = userService.addUser(user);
+			if (user.getId() < 1) {
+				user = new User();
+				user.setName("Failed to add new user");
+			}
 			jsonResponse = objectMapper.writeValueAsString(user);
 			resp.getWriter().println(jsonResponse);
 			break;

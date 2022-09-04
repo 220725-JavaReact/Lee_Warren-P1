@@ -3,6 +3,7 @@ package com.revature.rest.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -71,7 +72,24 @@ public class ProductController extends HttpServlet {
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPost(req, resp);
+		String requestURI = req.getRequestURI().replace("/rest/", "");
+		resp.setContentType("application/json");
+		String jsonResponse = null;
+		switch (requestURI) {
+		case "product/add":
+			String jsonRequest = req.getReader().lines().collect(Collectors.joining());
+			Product product = objectMapper.readValue(jsonRequest, Product.class);
+			product = productService.addProduct(product);
+			if (product.getId() < 1) {
+				product = new Product();
+				product.setName("Failed to add new product");
+			}
+			jsonResponse = objectMapper.writeValueAsString(product);
+			resp.getWriter().println(jsonResponse);
+			break;
+		default:
+			super.doPost(req, resp);
+			break;
+		}
 	}
 }
