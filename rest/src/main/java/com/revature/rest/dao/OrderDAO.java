@@ -55,23 +55,23 @@ public class OrderDAO implements DAO<Order> {
 						statement3.setInt(3, currentLineItem.getProduct().getId());
 						if (statement3.getUpdateCount() > 0) continue;
 					}
-					logger.warn("Transaction failed. Rolling back changes.");
+					logger.warn("Transaction to add new user failed. Rolling back changes.");
 					dbConnection.rollback();
 					dbConnection.setAutoCommit(true);
 					instance.setId(0);
 					break;
 				}
-				logger.info("Transaction succeeded. Commiting changes...");
+				logger.info("Transaction to add new user succeeded. Committing changes...");
 				dbConnection.commit();
 				dbConnection.setAutoCommit(true);
 			} else {
-				logger.warn("Transaction failed. Rolling back changes.");
+				logger.warn("Transaction to add new user failed. Rolling back changes.");
 				dbConnection.rollback();
 				dbConnection.setAutoCommit(true);
 				instance.setId(0);
 			}
 		} catch (SQLException e) {
-			logger.warn("Failed to add new order. Rolling back changes.", e);
+			logger.warn("Transaction to add new user failed. Rolling back changes.", e);
 			try {
 				dbConnection.rollback();
 				dbConnection.setAutoCommit(true);
@@ -108,7 +108,7 @@ public class OrderDAO implements DAO<Order> {
 					currentOrder.setTotal(resultSet.getDouble("total"));
 					currentOrder.setDate(resultSet.getTimestamp("date"));
 				}
-				currentLineItems.add(new LineItem(productService.getProductById(resultSet.getInt("product_id")), resultSet.getInt("quantity")));
+				currentLineItems.add(new LineItem(orderId, productService.getProductById(resultSet.getInt("product_id")), resultSet.getInt("quantity")));
 			}
 			if (!currentLineItems.isEmpty()) {
 				currentOrder.setLineItems(currentLineItems);

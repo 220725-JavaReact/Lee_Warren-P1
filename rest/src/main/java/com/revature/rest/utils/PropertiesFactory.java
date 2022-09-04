@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 public class PropertiesFactory {
 	private static PropertiesFactory propertiesFactory = new PropertiesFactory();
 	private static Logger logger = LogManager.getLogger(PropertiesFactory.class);
-	private static final String propertiesPath = "..\\Lee-Warren-P1\\rest\\src\\main\\resources\\application.properties";
 	/**
 	 * Returns the PropertiesFactory instance.
 	 * @return the PropertiesFactory instance
@@ -33,24 +32,10 @@ public class PropertiesFactory {
 		logger.info("Loading properties from file...");
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileReader(propertiesPath));
-		} catch (FileNotFoundException e) {
-			logger.warn("Could not locate properties file.", e);
-		} catch (IOException e) {
+			properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+		}catch (IOException e) {
 			logger.warn("Could not load from properties file.", e);
 		}
 		return properties;
-	}
-	/**
-	 * Stores the information from the input into the properties file.
-	 * @param updatedProperties the updated properties
-	 */
-	public void storeProperties(Properties updatedProperties) {
-		logger.info("Storing properties to file...");
-		try {
-			updatedProperties.store(new FileWriter(propertiesPath), null);
-		} catch (IOException e) {
-			logger.warn("Could not store to properties file.", e);
-		}
 	}
 }

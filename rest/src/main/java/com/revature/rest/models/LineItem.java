@@ -5,6 +5,7 @@ package com.revature.rest.models;
  * @author Warren Lee
  */
 public class LineItem {
+	private int id;
 	private Product product;
 	private int quantity;
 	/**
@@ -15,12 +16,37 @@ public class LineItem {
 	}
 	/**
 	 * Constructs a line item from the specified data.
-	 * @param item the line item's product
+	 * @param product the line item's product
 	 * @param quantity the line item's quantity
 	 */
 	public LineItem(Product product, int quantity) {
 		this.product = product;
 		this.quantity = quantity;
+	}
+	/**
+	 * Constructs a line item from the specified data.
+	 * @param id the order or store id attached to this line item
+	 * @param product the line item's product
+	 * @param quantity the line item's quantity
+	 */
+	public LineItem(int id, Product product, int quantity) {
+		this.id = id;
+		this.product = product;
+		this.quantity = quantity;
+	}
+	/**
+	 * Returns the line item's order or store id.
+	 * @return the line item's order or store id
+	 */
+	public int getId() {
+		return id;
+	}
+	/**
+	 *  Sets the line item's order or store id.
+	 * @param newId the line item's new order or store id
+	 */
+	public void setId(int newId) {
+		id = newId;
 	}
 	/**
 	 * Returns the line item's product.

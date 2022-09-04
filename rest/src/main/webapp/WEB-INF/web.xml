@@ -13,6 +13,10 @@
     <servlet-class>com.revature.rest.controller.StoreController</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>StoreProductController</servlet-name>
+    <servlet-class>com.revature.rest.controller.StoreProductController</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>UserController</servlet-name>
     <servlet-class>com.revature.rest.controller.UserController</servlet-class>
   </servlet>
@@ -28,6 +32,14 @@
     <url-pattern>/store</url-pattern>
     <url-pattern>/store/add</url-pattern>
     <url-pattern>/stores</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>StoreProductController</servlet-name>
+    <url-pattern>/product/stores</url-pattern>
+    <url-pattern>/store/products</url-pattern>
+    <url-pattern>/store/products/add</url-pattern>
+    <url-pattern>/store/products/delete</url-pattern>
+    <url-pattern>/store/products/update</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>UserController</servlet-name>

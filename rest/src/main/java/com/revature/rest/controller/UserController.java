@@ -68,10 +68,10 @@ public class UserController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String requestURI = req.getRequestURI().replace("/rest/", "");
 		resp.setContentType("application/json");
+		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
 		switch (requestURI) {
 		case "user/add":
-			String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 			User user = objectMapper.readValue(jsonRequest, User.class);
 			user.setPassword(PasswordFactory.getInstance().encodePassword(user.getPassword()));
 			user = userService.addUser(user);

@@ -74,10 +74,10 @@ public class ProductController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String requestURI = req.getRequestURI().replace("/rest/", "");
 		resp.setContentType("application/json");
+		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
 		switch (requestURI) {
 		case "product/add":
-			String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 			Product product = objectMapper.readValue(jsonRequest, Product.class);
 			product = productService.addProduct(product);
 			if (product.getId() < 1) {

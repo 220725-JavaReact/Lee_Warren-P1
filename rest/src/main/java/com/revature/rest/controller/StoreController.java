@@ -65,10 +65,10 @@ public class StoreController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String requestURI = req.getRequestURI().replace("/rest/", "");
 		resp.setContentType("application/json");
+		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
 		switch (requestURI) {
 		case "store/add":
-			String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 			Store store = objectMapper.readValue(jsonRequest, Store.class);
 			store = storeService.addStore(store);
 			if (store.getId() < 1) {
