@@ -25,7 +25,7 @@ public class UserDAO implements DAO<User> {
 	public User addInstance(User instance) {
 		logger.info("Adding new user...");
 		try (Connection dbConnection = ConnectionFactory.getInstance().getConnection()) {
-			String query = "insert into users (name, address, email, phone_number, username, password, access_level) values (?, ?, ?, ?, ?, ?, ?) returning id";
+			String query = "insert into users (name, address, email, phone, username, password, level) values (?, ?, ?, ?, ?, ?, ?) returning id";
 			PreparedStatement statement = dbConnection.prepareStatement(query);
 			statement.setString(1, instance.getName());
 			statement.setString(2, instance.getAddress());
@@ -55,10 +55,10 @@ public class UserDAO implements DAO<User> {
 					resultSet.getString("name"),
 					resultSet.getString("address"),
 					resultSet.getString("email"),
-					resultSet.getString("phone_number"),
+					resultSet.getString("phone"),
 					resultSet.getString("username"),
 					resultSet.getString("password"),
-					AccessLevel.valueOf(resultSet.getString("access_level"))
+					AccessLevel.valueOf(resultSet.getString("level"))
 				));
 			}
 		} catch (SQLException e) {
@@ -70,7 +70,7 @@ public class UserDAO implements DAO<User> {
 	public boolean updateInstance(User instance) {
 		logger.info("Updating user with id = " + instance.getId() + "...");
 		try (Connection dbConnection = ConnectionFactory.getInstance().getConnection()) {
-			String query = "update users set name = ?, address = ?, email = ?, phone_number = ?, username = ?, password = ?, access_level = ? where id = ?";
+			String query = "update users set name = ?, address = ?, email = ?, phone = ?, username = ?, password = ?, level = ? where id = ?";
 			PreparedStatement statement = dbConnection.prepareStatement(query);
 			statement.setString(1, instance.getName());
 			statement.setString(2, instance.getAddress());

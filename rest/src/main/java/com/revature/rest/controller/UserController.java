@@ -3,6 +3,7 @@ package com.revature.rest.controller;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rest.dao.UserDAO;
 import com.revature.rest.models.User;
 import com.revature.rest.services.UserService;
+import com.revature.rest.utils.PasswordFactory;
 
 /**
  * Handles servlet requests for users.
@@ -48,16 +50,12 @@ public class UserController extends HttpServlet {
 			} else if (parameterMap.containsKey("username")) {
 				user = userService.getUserByUsername(parameterMap.get("username")[0]);
 			}
-			user.setPassword("HIDDEN");
 			jsonResponse = objectMapper.writeValueAsString(user);
 			resp.getWriter().println(jsonResponse);
 			break;
 		case "users":
 			List<User> users = null;
-			if (parameterMap.isEmpty()) {
-				users = userService.getAllUsers();
-				for (User currentUser : users) currentUser.setPassword("HIDDEN");
-			}
+			if (parameterMap.isEmpty()) users = userService.getAllUsers();
 			jsonResponse = objectMapper.writeValueAsString(users);
 			resp.getWriter().println(jsonResponse);
 			break;
@@ -68,7 +66,21 @@ public class UserController extends HttpServlet {
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		super.doPost(req, resp);
+		String requestURI = req.getRequestURI().replace("/rest/", "");
+		resp.setContentType("application/json");
+		String jsonResponse = null;
+		switch (requestURI) {
+		case "user/add":
+			String jsonRequest = req.getReader().lines().collect(Collectors.joining());
+			User user = objectMapper.readValue(jsonRequest, User.class);
+			user.setPassword(PasswordFactory.getInstance().encodePassword(user.getPassword()));
+			user = userService.addUser(user);
+			jsonResponse = objectMapper.writeValueAsString(user);
+			resp.getWriter().println(jsonResponse);
+			break;
+		default:
+			super.doPost(req, resp);
+			break;
+		}
 	}
 }

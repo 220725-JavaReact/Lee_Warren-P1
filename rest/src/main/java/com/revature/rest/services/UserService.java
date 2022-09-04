@@ -25,6 +25,15 @@ public class UserService {
 		this.userDAO = userDAO;
 	}
 	/**
+	 * Adds a new user to the database and returns it with its id.
+	 * @param newUser the new user
+	 * @return the user with its id
+	 */
+	public User addUser(User newUser) {
+		logger.info("Adding new user...");
+		return userDAO.addInstance(newUser);
+	}
+	/**
 	 * Returns a list of all users.
 	 * @return a list of all users
 	 */
