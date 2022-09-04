@@ -5,11 +5,12 @@ package com.revature.rest.utils;
  * @author Warren Lee
  */
 public enum ProductCategory {
-	ACCESSORY("Accessory"),
+	ADVENTURING_GEAR("Adventuring Gear"),
 	AMMUNITION("Ammunition"),
 	ARMOR("Armor"),
 	POTION("Potion"),
 	SCROLL("Scroll"),
+	TOOL("Tool"),
 	WEAPON("Weapon"),
 	WONDROUS_ITEM("Wondrous Item");
 	public final String name;
