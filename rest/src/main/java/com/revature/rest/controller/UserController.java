@@ -70,14 +70,23 @@ public class UserController extends HttpServlet {
 		resp.setContentType("application/json");
 		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
+		User user = objectMapper.readValue(jsonRequest, User.class);
 		switch (requestURI) {
 		case "user/add":
-			User user = objectMapper.readValue(jsonRequest, User.class);
 			user.setPassword(PasswordFactory.getInstance().encodePassword(user.getPassword()));
 			user = userService.addUser(user);
 			if (user.getId() < 1) {
 				user = new User();
 				user.setName("Failed to add new user");
+			}
+			jsonResponse = objectMapper.writeValueAsString(user);
+			resp.getWriter().println(jsonResponse);
+			break;
+		case "user/update":
+			boolean updateSuccess = userService.updateUser(user);
+			if (!updateSuccess) {
+				user = new User();
+				user.setName("Failed to update user");
 			}
 			jsonResponse = objectMapper.writeValueAsString(user);
 			resp.getWriter().println(jsonResponse);

@@ -92,4 +92,13 @@ public class UserService {
 			return notFoundUser;
 		}
 	}
+	/**
+	 * Updates a user and returns a boolean that indicates whether the operation was successful.
+	 * @param updateUser the user to update
+	 * @return a boolean that indicates whether the operation was successful
+	 */
+	public boolean updateUser(User updateUser) {
+		logger.info("Updating user...");
+		return userDAO.updateInstance(updateUser);
+	}
 }

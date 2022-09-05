@@ -73,7 +73,7 @@ public class StoreProductDAO implements DAO<LineItem> {
 	}
 	@Override
 	public List<LineItem> getAllInstances() {
-		logger.info("Getting all store products...");
+		logger.info("Getting all store inventories...");
 		List<LineItem> storeProducts = new ArrayList<>();
 		try (Connection dbConnection = ConnectionFactory.getInstance().getConnection()) {
 			String query = "select * from store_products";
@@ -87,7 +87,7 @@ public class StoreProductDAO implements DAO<LineItem> {
 				));
 			}
 		} catch (SQLException e) {
-			logger.warn("Failed to get all store products.", e);
+			logger.warn("Failed to get all store inventories.", e);
 		}
 		return storeProducts;
 	}

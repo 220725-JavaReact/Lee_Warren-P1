@@ -77,41 +77,39 @@ public class StoreProductController extends HttpServlet {
 		resp.setContentType("application/json");
 		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
+		LineItem storeProduct = objectMapper.readValue(jsonRequest, LineItem.class);
 		switch (requestURI) {
 		case "store/products/add":
-			LineItem storeProductToAdd = objectMapper.readValue(jsonRequest, LineItem.class);
-			storeProductToAdd = storeProductService.addStoreProduct(storeProductToAdd);
-			if (storeProductToAdd.getId() < 1) {
-				storeProductToAdd = new LineItem();
+			storeProduct = storeProductService.addStoreProduct(storeProduct);
+			if (storeProduct.getId() < 1) {
+				storeProduct = new LineItem();
 				Product notAddedProduct = new Product();
 				notAddedProduct.setName("Failed to add new inventory");
-				storeProductToAdd.setProduct(notAddedProduct);
+				storeProduct.setProduct(notAddedProduct);
 			}
-			jsonResponse = objectMapper.writeValueAsString(storeProductToAdd);
+			jsonResponse = objectMapper.writeValueAsString(storeProduct);
 			resp.getWriter().println(jsonResponse);
 			break;
 		case "store/products/update":
-			LineItem storeProductToUpdate = objectMapper.readValue(jsonRequest, LineItem.class);
-			boolean updateSuccess = storeProductService.updateStoreProduct(storeProductToUpdate);
+			boolean updateSuccess = storeProductService.updateStoreProduct(storeProduct);
 			if (!updateSuccess) {
-				storeProductToUpdate = new LineItem();
+				storeProduct = new LineItem();
 				Product notUpdatedProduct = new Product();
 				notUpdatedProduct.setName("Failed to update inventory");
-				storeProductToUpdate.setProduct(notUpdatedProduct);
+				storeProduct.setProduct(notUpdatedProduct);
 			}
-			jsonResponse = objectMapper.writeValueAsString(storeProductToUpdate);
+			jsonResponse = objectMapper.writeValueAsString(storeProduct);
 			resp.getWriter().println(jsonResponse);
 			break;
 		case "store/products/delete":
-			LineItem storeProductToDelete = objectMapper.readValue(jsonRequest, LineItem.class);
-			boolean deleteSuccess = storeProductService.deleteStoreProduct(storeProductToDelete);
+			boolean deleteSuccess = storeProductService.deleteStoreProduct(storeProduct);
 			if (!deleteSuccess) {
-				storeProductToDelete = new LineItem();
+				storeProduct = new LineItem();
 				Product notDeletedProduct = new Product();
 				notDeletedProduct.setName("Failed to delete inventory");
-				storeProductToDelete.setProduct(notDeletedProduct);
+				storeProduct.setProduct(notDeletedProduct);
 			}
-			jsonResponse = objectMapper.writeValueAsString(storeProductToDelete);
+			jsonResponse = objectMapper.writeValueAsString(storeProduct);
 			resp.getWriter().println(jsonResponse);
 			break;
 		default:

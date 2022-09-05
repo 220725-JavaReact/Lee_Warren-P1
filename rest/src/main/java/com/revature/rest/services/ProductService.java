@@ -74,7 +74,7 @@ public class ProductService {
 	 * @return a boolean that indicates whether the operation was successful
 	 */
 	public boolean updateProduct(Product updatedProduct) {
-		logger.info("Updating product with id = " + updatedProduct.getId() + "...");
+		logger.info("Updating product...");
 		return productDAO.updateInstance(updatedProduct);
 	}
 	/**
@@ -83,7 +83,7 @@ public class ProductService {
 	 * @return a boolean that indicates whether the operation was successful
 	 */
 	public boolean deleteProduct(Product discontinuedProduct) {
-		logger.info("Deleting product with id = " + discontinuedProduct.getId() + "...");
+		logger.info("Deleting product...");
 		return productDAO.deleteInstance(discontinuedProduct);
 	}
 }

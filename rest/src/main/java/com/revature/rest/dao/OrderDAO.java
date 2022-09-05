@@ -25,7 +25,7 @@ public class OrderDAO implements DAO<Order> {
 	private static ProductService productService = new ProductService(new ProductDAO());
 	@Override
 	public Order addInstance(Order instance) {
-		logger.info("Adding new order...");
+		logger.info("Adding new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + "...");
 		Connection dbConnection = ConnectionFactory.getInstance().getConnection();
 		try {
 			dbConnection.setAutoCommit(false);
@@ -38,7 +38,7 @@ public class OrderDAO implements DAO<Order> {
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				instance.setId(resultSet.getInt("id"));
-				logger.info("Adding new order's line items...");
+				logger.info("Adding line items for order with id = " + instance.getId() + "...");
 				for (LineItem currentLineItem : instance.getLineItems()) {
 					String query2 = "insert into order_items (order_id, product_id, quantity) values (?, ?, ?)";
 					PreparedStatement statement2 = dbConnection.prepareStatement(query2);
@@ -47,7 +47,7 @@ public class OrderDAO implements DAO<Order> {
 					statement2.setInt(3, currentLineItem.getQuantity());
 					statement2.execute();
 					if (statement2.getUpdateCount() > 0) {
-						logger.info("Updating store's inventory of order's line item...");
+						logger.info("Updating inventory of store with id = " + instance.getStoreId() + " for product with id = " + currentLineItem.getProduct().getId() + "...");
 						String query3 = "update store_products set quantity = quantity - ? where store_id = ? and product_id = ?";
 						PreparedStatement statement3 = dbConnection.prepareStatement(query3);
 						statement3.setInt(1, currentLineItem.getQuantity());
@@ -55,23 +55,23 @@ public class OrderDAO implements DAO<Order> {
 						statement3.setInt(3, currentLineItem.getProduct().getId());
 						if (statement3.getUpdateCount() > 0) continue;
 					}
-					logger.warn("Transaction to add new user failed. Rolling back changes.");
+					logger.warn("Transaction to add new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " failed. Rolling back changes.");
 					dbConnection.rollback();
 					dbConnection.setAutoCommit(true);
 					instance.setId(0);
 					break;
 				}
-				logger.info("Transaction to add new user succeeded. Committing changes...");
+				logger.info("Transaction to add new order with id = " + instance.getId() + " for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " succeeded. Committing changes...");
 				dbConnection.commit();
 				dbConnection.setAutoCommit(true);
 			} else {
-				logger.warn("Transaction to add new user failed. Rolling back changes.");
+				logger.warn("Transaction to add new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " failed. Rolling back changes.");
 				dbConnection.rollback();
 				dbConnection.setAutoCommit(true);
 				instance.setId(0);
 			}
 		} catch (SQLException e) {
-			logger.warn("Transaction to add new user failed. Rolling back changes.", e);
+			logger.warn("Transaction to add new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " failed. Rolling back changes.", e);
 			try {
 				dbConnection.rollback();
 				dbConnection.setAutoCommit(true);

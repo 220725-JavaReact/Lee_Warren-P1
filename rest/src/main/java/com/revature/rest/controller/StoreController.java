@@ -67,13 +67,22 @@ public class StoreController extends HttpServlet {
 		resp.setContentType("application/json");
 		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
+		Store store = objectMapper.readValue(jsonRequest, Store.class);
 		switch (requestURI) {
 		case "store/add":
-			Store store = objectMapper.readValue(jsonRequest, Store.class);
 			store = storeService.addStore(store);
 			if (store.getId() < 1) {
 				store = new Store();
 				store.setName("Failed to add new store");
+			}
+			jsonResponse = objectMapper.writeValueAsString(store);
+			resp.getWriter().println(jsonResponse);
+			break;
+		case "store/update":
+			boolean updateSuccess = storeService.updateStore(store);
+			if (!updateSuccess) {
+				store = new Store();
+				store.setName("Failed to update store");
 			}
 			jsonResponse = objectMapper.writeValueAsString(store);
 			resp.getWriter().println(jsonResponse);

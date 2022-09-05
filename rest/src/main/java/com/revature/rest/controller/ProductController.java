@@ -1,6 +1,7 @@
 package com.revature.rest.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class ProductController extends HttpServlet {
 		switch (requestURI) {
 		case "product":
 			Product product = new Product();
-			product.setName("Prouct not found");
+			product.setName("Product not found");
 			if (parameterMap.containsKey("id")) {
 				int id = 0;
 				try {
@@ -59,9 +60,9 @@ public class ProductController extends HttpServlet {
 				try {
 					products = productService.getProductsByCategory(ProductCategory.valueOf(parameterMap.get("category")[0].toUpperCase()));
 				} catch (IllegalArgumentException e) {
-					logger.warn("Invalid id parameter.", e);
+					logger.warn("Invalid category parameter.", e);
 				}
-			}
+			} else products = new ArrayList<>();
 			jsonResponse = objectMapper.writeValueAsString(products);
 			resp.getWriter().println(jsonResponse);
 			break;
@@ -76,13 +77,22 @@ public class ProductController extends HttpServlet {
 		resp.setContentType("application/json");
 		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
+		Product product = objectMapper.readValue(jsonRequest, Product.class);
 		switch (requestURI) {
 		case "product/add":
-			Product product = objectMapper.readValue(jsonRequest, Product.class);
 			product = productService.addProduct(product);
 			if (product.getId() < 1) {
 				product = new Product();
 				product.setName("Failed to add new product");
+			}
+			jsonResponse = objectMapper.writeValueAsString(product);
+			resp.getWriter().println(jsonResponse);
+			break;
+		case "product/update":
+			boolean updateSuccess = productService.updateProduct(product);
+			if (!updateSuccess) {
+				product = new Product();
+				product.setName("Failed to update product");
 			}
 			jsonResponse = objectMapper.writeValueAsString(product);
 			resp.getWriter().println(jsonResponse);

@@ -57,4 +57,13 @@ public class StoreService {
 			return notFoundStore;
 		}
 	}
+	/**
+	 * Updates a store and returns a boolean that indicates whether the operation was successful.
+	 * @param updateStore the store to update
+	 * @return a boolean that indicates whether the operation was successful
+	 */
+	public boolean updateStore(Store updateStore) {
+		logger.info("Updating store...");
+		return storeDAO.updateInstance(updateStore);
+	}
 }
