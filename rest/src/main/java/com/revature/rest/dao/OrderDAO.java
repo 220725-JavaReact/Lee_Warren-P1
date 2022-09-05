@@ -53,6 +53,7 @@ public class OrderDAO implements DAO<Order> {
 						statement3.setInt(1, currentLineItem.getQuantity());
 						statement3.setInt(2, instance.getStoreId());
 						statement3.setInt(3, currentLineItem.getProduct().getId());
+						statement3.execute();
 						if (statement3.getUpdateCount() > 0) continue;
 					}
 					logger.warn("Transaction to add new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " failed. Rolling back changes.");
@@ -61,9 +62,22 @@ public class OrderDAO implements DAO<Order> {
 					instance.setId(0);
 					break;
 				}
-				logger.info("Transaction to add new order with id = " + instance.getId() + " for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " succeeded. Committing changes...");
-				dbConnection.commit();
-				dbConnection.setAutoCommit(true);
+				logger.info("Updating balance of store with id = " + instance.getStoreId() + "...");
+				String query4 = "update stores set balance = balance + ? where id = ?";
+				PreparedStatement statement4 = dbConnection.prepareStatement(query4);
+				statement4.setDouble(1, instance.getTotal());
+				statement4.setInt(2, instance.getStoreId());
+				statement4.execute();
+				if (statement4.getUpdateCount() > 0) {
+					logger.info("Transaction to add new order with id = " + instance.getId() + " for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " succeeded. Committing changes...");
+					dbConnection.commit();
+					dbConnection.setAutoCommit(true);
+				} else {
+					logger.warn("Transaction to add new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " failed. Rolling back changes.");
+					dbConnection.rollback();
+					dbConnection.setAutoCommit(true);
+					instance.setId(0);
+				}
 			} else {
 				logger.warn("Transaction to add new order for user with id = " + instance.getUserId() + " and store with id = " + instance.getStoreId() + " failed. Rolling back changes.");
 				dbConnection.rollback();

@@ -40,9 +40,7 @@ public class StoreProductController extends HttpServlet {
 				int id = 0;
 				try {
 					id = Integer.parseInt(parameterMap.get("id")[0]);
-					if (id > 0) {
-						storeProducts = storeProductService.getAllStoreProductsByStoreId(id);
-					}
+					if (id > 0) storeProducts = storeProductService.getAllStoreProductsByStoreId(id);
 				} catch (NumberFormatException e) {
 					logger.warn("Invalid id parameter.", e);
 				}
@@ -56,9 +54,7 @@ public class StoreProductController extends HttpServlet {
 				int id = 0;
 				try {
 					id = Integer.parseInt(parameterMap.get("id")[0]);
-					if (id > 0) {
-						productStores = storeProductService.getAllStoreProductsByProductId(id);
-					}
+					if (id > 0) productStores = storeProductService.getAllStoreProductsByProductId(id);
 				} catch (NumberFormatException e) {
 					logger.warn("Invalid id parameter.", e);
 				}

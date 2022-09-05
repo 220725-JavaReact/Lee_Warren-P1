@@ -41,15 +41,11 @@ public class UserController extends HttpServlet {
 				int id = 0;
 				try {
 					id = Integer.parseInt(parameterMap.get("id")[0]);
-					if (id > 0) {
-						user = userService.getUserById(id);
-					}
+					if (id > 0) user = userService.getUserById(id);
 				} catch (NumberFormatException e) {
 					logger.warn("Invalid id parameter.", e);
 				}
-			} else if (parameterMap.containsKey("username")) {
-				user = userService.getUserByUsername(parameterMap.get("username")[0]);
-			}
+			} else if (parameterMap.containsKey("username")) user = userService.getUserByUsername(parameterMap.get("username")[0]);
 			jsonResponse = objectMapper.writeValueAsString(user);
 			resp.getWriter().println(jsonResponse);
 			break;

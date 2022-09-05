@@ -42,9 +42,7 @@ public class ProductController extends HttpServlet {
 				int id = 0;
 				try {
 					id = Integer.parseInt(parameterMap.get("id")[0]);
-					if (id > 0) {
-						product = productService.getProductById(id);
-					}
+					if (id > 0) product = productService.getProductById(id);
 				} catch (NumberFormatException e) {
 					logger.warn("Invalid id parameter.", e);
 				}
@@ -54,9 +52,8 @@ public class ProductController extends HttpServlet {
 			break;
 		case "products":
 			List<Product> products = null;
-			if (parameterMap.isEmpty()) {
-				products = productService.getAllProducts();
-			} else if (parameterMap.containsKey("category")) {
+			if (parameterMap.isEmpty()) products = productService.getAllProducts();
+			else if (parameterMap.containsKey("category")) {
 				try {
 					products = productService.getProductsByCategory(ProductCategory.valueOf(parameterMap.get("category")[0].toUpperCase()));
 				} catch (IllegalArgumentException e) {
