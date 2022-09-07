@@ -3,7 +3,8 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Wyn&apos;s Wild Wares</display-name>
+  <display-name>Wyn&apos;s Wild Wares REST API</display-name>
+  
   <servlet>
     <servlet-name>OrderController</servlet-name>
     <servlet-class>com.revature.rest.controller.OrderController</servlet-class>
@@ -11,6 +12,10 @@
   <servlet>
     <servlet-name>ProductController</servlet-name>
     <servlet-class>com.revature.rest.controller.ProductController</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>SessionController</servlet-name>
+    <servlet-class>com.revature.rest.controller.SessionController</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>StoreController</servlet-name>
@@ -37,6 +42,11 @@
     <url-pattern>/product/add</url-pattern>
     <url-pattern>/product/update</url-pattern>
     <url-pattern>/products</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>SessionController</servlet-name>
+    <url-pattern>/session/login</url-pattern>
+    <url-pattern>/session/logout</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>StoreController</servlet-name>

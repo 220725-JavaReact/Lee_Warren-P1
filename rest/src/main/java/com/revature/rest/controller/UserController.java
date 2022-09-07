@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.rest.dao.UserDAO;
 import com.revature.rest.models.User;
@@ -45,7 +46,9 @@ public class UserController extends HttpServlet {
 				} catch (NumberFormatException e) {
 					logger.warn("Invalid id parameter.", e);
 				}
-			} else if (parameterMap.containsKey("username")) user = userService.getUserByUsername(parameterMap.get("username")[0]);
+			} else if (parameterMap.containsKey("username")) {
+				user = userService.getUserByUsername(parameterMap.get("username")[0]);
+			}
 			jsonResponse = objectMapper.writeValueAsString(user);
 			resp.getWriter().println(jsonResponse);
 			break;
@@ -66,24 +69,35 @@ public class UserController extends HttpServlet {
 		resp.setContentType("application/json");
 		String jsonRequest = req.getReader().lines().collect(Collectors.joining());
 		String jsonResponse = null;
-		User user = objectMapper.readValue(jsonRequest, User.class);
 		switch (requestURI) {
 		case "user/add":
-			user.setPassword(PasswordFactory.getInstance().encodePassword(user.getPassword()));
-			user = userService.addUser(user);
-			if (user.getId() < 1) {
-				user = new User();
-				user.setName("Failed to add new user");
+			User userToAdd = objectMapper.readValue(jsonRequest, User.class);
+			userToAdd.setPassword(PasswordFactory.getInstance().encodePassword(userToAdd.getPassword()));
+			userToAdd = userService.addUser(userToAdd);
+			if (userToAdd.getId() < 1) {
+				userToAdd = new User();
+				userToAdd.setName("Failed to add new user");
 			}
-			jsonResponse = objectMapper.writeValueAsString(user);
+			jsonResponse = objectMapper.writeValueAsString(userToAdd);
 			resp.getWriter().println(jsonResponse);
 			break;
 		case "user/update":
-			boolean updateSuccess = userService.updateUser(user);
+			User userToUpdate = objectMapper.readValue(jsonRequest, User.class);
+			boolean updateSuccess = userService.updateUser(userToUpdate);
 			if (!updateSuccess) {
-				user = new User();
-				user.setName("Failed to update user");
+				userToUpdate = new User();
+				userToUpdate.setName("Failed to update user");
 			}
+			jsonResponse = objectMapper.writeValueAsString(userToUpdate);
+			resp.getWriter().println(jsonResponse);
+			break;
+		case "user":
+			JsonNode requestJson = objectMapper.readTree(jsonRequest);
+			User user = new User();
+			user.setName("User not found");
+			String username = requestJson.get("username").asText();
+			String password = requestJson.get("password").asText();
+			user = userService.getUserByMatchedCredentials(username, password);
 			jsonResponse = objectMapper.writeValueAsString(user);
 			resp.getWriter().println(jsonResponse);
 			break;
