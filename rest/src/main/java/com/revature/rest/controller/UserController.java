@@ -83,6 +83,7 @@ public class UserController extends HttpServlet {
 			break;
 		case "user/update":
 			User userToUpdate = objectMapper.readValue(jsonRequest, User.class);
+			if (!userToUpdate.getPassword().matches("^\\$2[aby]\\$\\d{1,2}\\$.+")) userToUpdate.setPassword(PasswordFactory.getInstance().encodePassword(userToUpdate.getPassword()));
 			boolean updateSuccess = userService.updateUser(userToUpdate);
 			if (!updateSuccess) {
 				userToUpdate = new User();
