@@ -20,7 +20,6 @@ import org.apache.logging.log4j.Logger;
 public class RESTFactory {
 	private static RESTFactory restFactory = new RESTFactory();
 	private static Logger logger = LogManager.getLogger(RESTFactory.class);
-	private static CloseableHttpAsyncClient httpClient = HttpAsyncClientBuilder.create().build();
 	private static String restHost = PropertiesFactory.getInstance().loadProperties().getProperty("rest_host");
 	/**
 	 * Returns the RestFactory instance.
@@ -28,7 +27,6 @@ public class RESTFactory {
 	 */
 	public static RESTFactory getInstance() {
 		logger.info("Getting RestFactory instance...");
-		if (httpClient.getStatus() != IOReactorStatus.ACTIVE) httpClient.start();
 		return restFactory;
 	}
 	/**
@@ -39,21 +37,22 @@ public class RESTFactory {
 	public String sendGet(String uri) {
 		SimpleHttpRequest getRequest = SimpleRequestBuilder.get(restHost + uri).build();
 		SimpleHttpResponse getResponse = null;
-		Future<SimpleHttpResponse> future = httpClient.execute(getRequest, new FutureCallback<SimpleHttpResponse>() {
-			@Override
-			public void completed(SimpleHttpResponse result) {
-				logger.info("GET request successful.");
-			}
-			@Override
-			public void failed(Exception ex) {
-				logger.warn("GET request failed.", ex);
-			}
-			@Override
-			public void cancelled() {
-				logger.warn("GET request cancelled.");
-			}
-		});
-		try {
+		try (CloseableHttpAsyncClient httpClient = HttpAsyncClientBuilder.create().build()) {
+			httpClient.start();
+			Future<SimpleHttpResponse> future = httpClient.execute(getRequest, new FutureCallback<SimpleHttpResponse>() {
+				@Override
+				public void completed(SimpleHttpResponse result) {
+					logger.info("GET request successful.");
+				}
+				@Override
+				public void failed(Exception ex) {
+					logger.warn("GET request failed.", ex);
+				}
+				@Override
+				public void cancelled() {
+					logger.warn("GET request cancelled.");
+				}
+			});
 			getResponse = future.get();
 		} catch (Exception e) {
 			logger.warn("Could not retrieve GET request results.", e);
@@ -70,21 +69,22 @@ public class RESTFactory {
 		SimpleHttpRequest postRequest = SimpleRequestBuilder.post(restHost + uri).build();
 		postRequest.setBody(body, ContentType.APPLICATION_JSON);
 		SimpleHttpResponse postResponse = null;
-		Future<SimpleHttpResponse> future = httpClient.execute(postRequest, new FutureCallback<SimpleHttpResponse>() {
-			@Override
-			public void completed(SimpleHttpResponse result) {
-				logger.info("POST request successful.");
-			}
-			@Override
-			public void failed(Exception ex) {
-				logger.warn("POST request failed.", ex);
-			}
-			@Override
-			public void cancelled() {
-				logger.warn("POST request cancelled.");
-			}
-		});
-		try {
+		try (CloseableHttpAsyncClient httpClient = HttpAsyncClientBuilder.create().build()) {
+			httpClient.start();
+			Future<SimpleHttpResponse> future = httpClient.execute(postRequest, new FutureCallback<SimpleHttpResponse>() {
+				@Override
+				public void completed(SimpleHttpResponse result) {
+					logger.info("POST request successful.");
+				}
+				@Override
+				public void failed(Exception ex) {
+					logger.warn("POST request failed.", ex);
+				}
+				@Override
+				public void cancelled() {
+					logger.warn("POST request cancelled.");
+				}
+			});
 			postResponse = future.get();
 		} catch (Exception e) {
 			logger.warn("Could not retrieve POST request results.", e);
