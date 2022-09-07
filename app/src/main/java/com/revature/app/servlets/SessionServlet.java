@@ -29,8 +29,7 @@ public class SessionServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String requestURI = req.getRequestURI().replace("/app/", "");
-		switch (requestURI) {
-		case "login":
+		if (requestURI.equals("login")) {
 			logger.info("Logging in...");
 			ObjectNode requestJson = objectMapper.createObjectNode();
 			requestJson.put("username", req.getParameter("username"));
@@ -51,16 +50,20 @@ public class SessionServlet extends HttpServlet {
 				resp.addCookie(sessionCookie);
 				resp.sendRedirect("main.jsp");
 			}
-			break;
-		case "logout":
+		} else {
+			super.doPost(req, resp);
+		}
+	}
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String requestURI = req.getRequestURI().replace("/app/", "");
+		if (requestURI.equals("logout")) {
 			logger.info("Logging out...");
 			HttpSession session = req.getSession(false);
 			if (session != null) session.invalidate();
 			resp.sendRedirect("index.jsp");
-			break;
-		default:
-			super.doPost(req, resp);
-			break;
+		} else {
+			super.doGet(req, resp);
 		}
 	}
 }
