@@ -1,4 +1,5 @@
 # Build directory
+app/target/*
 rest/target/*
 
 # Compiled class file
